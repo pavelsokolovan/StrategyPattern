@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autofac;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,17 +9,16 @@ namespace StrategyPattern
 {
     class CommandProcessor
     {
-        private static Dictionary<string, ICommand> commands = new Dictionary<string, ICommand>()
-        {
-            {"search", new SearchCommand()},
-            {"cs_search", new CsSearchCommand()},
-            {"create_txt", new CreateTxtCommand()},
-            {"renove_txt", new RemoveTxtCommand()},
-        };
+        private readonly IContainer container;
 
-        public static void ProcessCommand(string command, string param)
+        public CommandProcessor(IContainer container)
         {
-            commands[command].Process(param);
+            this.container = container;
+        }
+
+        public void ProcessCommand(string command, string param)
+        {
+            container.ResolveNamed<ICommand>(command).Process(param);
         }
     }
 }
