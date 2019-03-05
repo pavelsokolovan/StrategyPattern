@@ -1,2 +1,2 @@
-# badcode
+# StrategyPattern
 refactoring
