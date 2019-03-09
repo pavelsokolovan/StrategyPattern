@@ -1,33 +1,43 @@
 ﻿using Autofac;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StrategyPattern
 {
     class Program
     {
-        static void Main(string[] args)
+        static IContainer container = GetContainer();
+
+        static void Main()
         {
-            string command = args[0];
-            string param = args[1];
+            do
+            {
+                Console.Write("enter command and parameter: ");
+                string input = Console.ReadLine();
+                var args = GetArguments(input);
+                string command = args.Item1;
+                string param = args.Item2;
 
-            IContainer container = GetContainer();
-            CommandProcessor commandProcessor = new CommandProcessor(container);
-            commandProcessor.ProcessCommand(command, param);
+                CommandProcessor commandProcessor = new CommandProcessor(container);
+                commandProcessor.ProcessCommand(command, param);
+            } while (true);
+        }
 
-            Console.ReadLine();
+        private static Tuple<string, string> GetArguments(string input)
+        {
+            string[] result = input.Split(' ');
+            string arg1 = result.Length > 0 ? result[0] : null;
+            string arg2 = result.Length > 1 ? result[1] : null;
+            return Tuple.Create(arg1, arg2);
         }
 
         static IContainer GetContainer()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<SearchCommand>().Named<ICommand>("search");
-            builder.RegisterType<CsSearchCommand>().Named<ICommand>("cs_search");
-            builder.RegisterType<CreateTxtCommand>().Named<ICommand>("create_txt");
-            builder.RegisterType<RemoveTxtCommand>().Named<ICommand>("remove_txt");
+            builder.RegisterType<SearchCommand>().Keyed<ICommand>(CommandType.search);
+            builder.RegisterType<CsSearchCommand>().Keyed<ICommand>(CommandType.cs_search);
+            builder.RegisterType<CreateTxtCommand>().Keyed<ICommand>(CommandType.create_txt);
+            builder.RegisterType<RemoveTxtCommand>().Keyed<ICommand>(CommandType.remove_txt);
+            builder.RegisterType<ExitCommand>().Keyed<ICommand>(CommandType.exit);
             return builder.Build();
         }
     }

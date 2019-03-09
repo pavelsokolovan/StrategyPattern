@@ -1,14 +1,19 @@
 ﻿using Autofac;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StrategyPattern
 {
     class CommandProcessor
     {
+        private readonly Dictionary<string, CommandType> commands = new Dictionary<string, CommandType>()
+        {
+            {"search", CommandType.search},
+            {"cs_search", CommandType.cs_search},
+            {"create_txt", CommandType.create_txt},
+            {"remove_txtrch", CommandType.remove_txt},
+            {"exit", CommandType.exit},
+        };
         private readonly IContainer container;
 
         public CommandProcessor(IContainer container)
@@ -18,7 +23,20 @@ namespace StrategyPattern
 
         public void ProcessCommand(string command, string param)
         {
-            container.ResolveNamed<ICommand>(command).Process(param);
+            try
+            {
+                CommandType comm;
+                if (!commands.TryGetValue(command, out comm))
+                {
+                    Console.WriteLine("unknown command");
+                    return;
+                }
+                container.ResolveKeyed<ICommand>(comm).Process(param);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

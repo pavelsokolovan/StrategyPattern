@@ -11,7 +11,18 @@ namespace StrategyPattern
     {
         public void Process(string param)
         {
-            File.Create(param + "\\test.txt");
+            try
+            {
+                File.Create(param + "\\test.txt");
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (PathTooLongException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

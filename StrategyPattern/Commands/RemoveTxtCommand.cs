@@ -11,7 +11,18 @@ namespace StrategyPattern
     {
         public void Process(string param)
         {
-            File.Delete(param + "\\test.txt");
+            try
+            {
+                File.Delete(param + "\\test.txt");
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (PathTooLongException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

@@ -11,13 +11,24 @@ namespace StrategyPattern
     {
         public void Process(string param)
         {
-            List<string> res = Directory.GetFiles(param, "*", SearchOption.AllDirectories).ToList();
-            foreach (string n in res)
+            try
             {
-                if (n.Substring(n.LastIndexOf(".") + 1) == "cs")
+                List<string> res = Directory.GetFiles(param, "*", SearchOption.AllDirectories).ToList();
+                foreach (string n in res)
                 {
-                    Console.WriteLine(n);
+                    if (n.Substring(n.LastIndexOf(".") + 1) == "cs")
+                    {
+                        Console.WriteLine(n);
+                    }
                 }
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (PathTooLongException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
     }

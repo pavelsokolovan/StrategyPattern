@@ -47,11 +47,13 @@
   <ItemGroup>
     <Compile Include="CommandProcessor.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandType.cs" />
     <Compile Include="Commands\CreateTxtCommand.cs" />
     <Compile Include="Commands\CsSearchCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\RemoveTxtCommand.cs" />
     <Compile Include="Commands\SearchCommand.cs" />
+    <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

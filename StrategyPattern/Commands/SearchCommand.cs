@@ -11,7 +11,20 @@ namespace StrategyPattern
     {
         public void Process(string param)
         {
-            Directory.GetFiles(param, "*", SearchOption.AllDirectories).ToList().ForEach(n => Console.WriteLine(n));
+            try
+            {
+                Directory.GetFiles(param, "*", SearchOption.AllDirectories)
+                    .ToList()
+                    .ForEach(n => Console.WriteLine(n));
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (PathTooLongException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
