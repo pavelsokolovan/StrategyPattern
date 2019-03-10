@@ -11,18 +11,13 @@ namespace StrategyPattern
     {
         public void Process(string param)
         {
-            try
+            if (!Directory.Exists(param))
             {
-                File.Delete(param + "\\test.txt");
+                Console.WriteLine("directory {0} doesn't exist", param);
+                return;
             }
-            catch (DirectoryNotFoundException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (PathTooLongException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+
+            File.Delete(param + "\\test.txt");
         }
     }
 }
