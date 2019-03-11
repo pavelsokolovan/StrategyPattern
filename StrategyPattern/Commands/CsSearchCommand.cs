@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 
 namespace StrategyPattern
 {
-    class CsSearchCommand: ICommand
+    class CsSearchCommand: Command, ICommand
     {
-        public void Process(string param)
+        public CsSearchCommand(ILog log) : base(log)
+        {
+        }
+
+        public override void Process(string param)
         {
             if (!Directory.Exists(param))
             {

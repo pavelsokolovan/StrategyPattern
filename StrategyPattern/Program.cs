@@ -5,7 +5,7 @@ namespace StrategyPattern
 {
     class Program
     {
-        static IContainer container = GetContainer();
+        static ICommandProcessor commandProcessor = GetCommandProcessor();
 
         static void Main()
         {
@@ -17,7 +17,6 @@ namespace StrategyPattern
                 string command = args.Item1;
                 string param = args.Item2;
 
-                CommandProcessor commandProcessor = new CommandProcessor(container);
                 commandProcessor.ProcessCommand(command, param);
             } while (true);
         }
@@ -30,15 +29,25 @@ namespace StrategyPattern
             return Tuple.Create(arg1, arg2);
         }
 
-        static IContainer GetContainer()
+        static ICommandProcessor GetCommandProcessor()
         {
-            var builder = new ContainerBuilder();
+            IContainer container;
+            ICommandProcessor commandProcessor;
+            ContainerBuilder builder = new ContainerBuilder();
+
             builder.RegisterType<SearchCommand>().Keyed<ICommand>(CommandType.search);
             builder.RegisterType<CsSearchCommand>().Keyed<ICommand>(CommandType.cs_search);
             builder.RegisterType<CreateTxtCommand>().Keyed<ICommand>(CommandType.create_txt);
             builder.RegisterType<RemoveTxtCommand>().Keyed<ICommand>(CommandType.remove_txt);
             builder.RegisterType<ExitCommand>().Keyed<ICommand>(CommandType.exit);
-            return builder.Build();
+            builder.RegisterType<Log>().As<ILog>();
+            builder.RegisterType<CommandProcessor>().As<ICommandProcessor>();
+
+            container = builder.Build();
+            commandProcessor = container.Resolve<ICommandProcessor>();
+            commandProcessor.Container = container;
+
+            return commandProcessor;
         }
     }
 }

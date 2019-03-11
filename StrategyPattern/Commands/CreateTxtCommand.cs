@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 
 namespace StrategyPattern
 {
-    class CreateTxtCommand: ICommand
+    class CreateTxtCommand: Command, ICommand
     {
-        public void Process(string param)
+        public CreateTxtCommand(ILog log): base(log)
+        {
+        }
+
+        public override void Process(string param)
         {
             if (!Directory.Exists(param))
             {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace StrategyPattern
 {
-    class CommandProcessor
+    class CommandProcessor: ICommandProcessor
     {
         private readonly Dictionary<string, CommandType> commands = new Dictionary<string, CommandType>()
         {
@@ -14,11 +14,24 @@ namespace StrategyPattern
             {"remove_txtrch", CommandType.remove_txt},
             {"exit", CommandType.exit},
         };
-        private readonly IContainer container;
+        private IContainer container;
+        private readonly ILog log;
 
-        public CommandProcessor(IContainer container)
+        public CommandProcessor(ILog log)
         {
-            this.container = container;
+            this.log = log;
+        }
+
+        public IContainer Container
+        {
+            get
+            {
+                return container;
+            }
+            set
+            {
+                container = value;
+            }
         }
 
         public void ProcessCommand(string command, string param)
@@ -28,13 +41,15 @@ namespace StrategyPattern
                 CommandType comm;
                 if (!commands.TryGetValue(command, out comm))
                 {
-                    Console.WriteLine("unknown command");
+                    log.Debug(String.Format("'{0}' unknown command.", command));
+                    Console.WriteLine("'{0}' unknown command.", command);
                     return;
                 }
                 container.ResolveKeyed<ICommand>(comm).Process(param);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                log.Error(ex.ToString());
                 throw;
             }
         }

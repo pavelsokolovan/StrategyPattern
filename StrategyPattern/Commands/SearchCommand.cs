@@ -7,19 +7,29 @@ using System.Threading.Tasks;
 
 namespace StrategyPattern
 {
-    class SearchCommand: ICommand
+    class SearchCommand: Command, ICommand
     {
-        public void Process(string param)
+        public SearchCommand(ILog log) : base(log)
         {
-            if(!Directory.Exists(param))
+        }
+
+        public override void Process(string param)
+        {
+            Log.Debug("SearchCommand.Process() start.");
+
+            if (!Directory.Exists(param))
             {
-                Console.WriteLine("directory {0} doesn't exist", param);
+                Log.Debug(String.Format("Directory '{0}' doesn't exist.", param));
+                Console.WriteLine("Directory '{0}' doesn't exist.", param);
+                Log.Debug("SearchCommand.Process() end.");
                 return;
             }
 
-            Directory.GetFiles(param, "*", SearchOption.AllDirectories)
+            Directory.GetFiles(null, "*", SearchOption.AllDirectories)
                 .ToList()
                 .ForEach(n => Console.WriteLine(n));
+
+            Log.Debug("SearchCommand.Process() end.");
         }
     }
 }
